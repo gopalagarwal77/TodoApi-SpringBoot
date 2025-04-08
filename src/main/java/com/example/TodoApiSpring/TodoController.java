@@ -15,6 +15,8 @@ public class TodoController {   // Object creation of todoController class is ma
 
     private static List<Todo> todoList;
 
+
+
     public TodoController(){
         todoList = new ArrayList<>();
         todoList.add(new Todo(1, false, "Todo 1", 1));     // ← creates and adds a Person object
@@ -28,13 +30,26 @@ public class TodoController {   // Object creation of todoController class is ma
 
     @PostMapping("/todos")
     @ResponseStatus(HttpStatus.CREATED)
+
     public ResponseEntity<Todo> createTodo(@RequestBody Todo newTodo){       // whatever body is coming in the incoming  body int the http request that body should be accessible inside the function
         /**
          * we can use this annotation to set the status code     @ResponseStatus(HttpStatus.CREATED)
-         * By using the responseentity annotation
+         * By using the responseentity class
          * */
         todoList.add(newTodo);
         return ResponseEntity.status(HttpStatus.CREATED).body(newTodo);
+    }
+
+    @GetMapping ("/todos/{todoId}")
+    public ResponseEntity<Todo> getTodoById(@PathVariable Long todoId){
+        for(Todo todo: todoList){
+            if(todo.getId()==todoId){
+                return ResponseEntity.ok(todo);
+            }
+
+        }
+        return ResponseEntity.notFound().build();
+      //  return ResponseEntity.status(HttpStatus.NOT_FOUND).body(TODO_NOT_FOUND);
     }
 
 }
