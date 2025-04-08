@@ -1,9 +1,8 @@
 package com.example.TodoApiSpring;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +22,19 @@ public class TodoController {   // Object creation of todoController class is ma
     }
 
     @GetMapping("/todos")         // get request on the specified url
-     public List<Todo> getTodos(){
-        return todoList;
+     public ResponseEntity<List<Todo>> getTodos(){
+        return ResponseEntity.ok(todoList);
     }
 
     @PostMapping("/todos")
-    public Todo createTodo(@RequestBody Todo newTodo){       // whatever body is coming in the incoming  body int the http request that body should be accessible inside the function
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Todo> createTodo(@RequestBody Todo newTodo){       // whatever body is coming in the incoming  body int the http request that body should be accessible inside the function
+        /**
+         * we can use this annotation to set the status code     @ResponseStatus(HttpStatus.CREATED)
+         * By using the responseentity annotation
+         * */
         todoList.add(newTodo);
-        return newTodo;
+        return ResponseEntity.status(HttpStatus.CREATED).body(newTodo);
     }
 
 }
